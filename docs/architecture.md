@@ -1,18 +1,22 @@
-# Architecture: Fine-Tuning Pipeline with LoRA
+# lora-finetuning-pipeline Architecture
 
 ## System Diagram
-The following Mermaid.js sequence diagram maps the core workflow and interactions:
+The following Mermaid.js sequence diagram maps the core workflow and interactions within the system:
 
 ```mermaid
 sequenceDiagram
-Data->>Trainer: Formatted JSONL
-Trainer->>PEFT: Attach LoRA adapters
-PEFT->>Unsloth: Train (4-bit QLoRA)
-Trainer->>W&B: Log metrics
-Trainer->>Eval: Benchmark vs Base Model
-Eval-->>Deployment: Export Adapter
+    Dataset->>DataLoader: Tokenize
+DataLoader->>BaseModel: Forward Pass
+BaseModel->>LoRA_Weights: Compute Gradients
+LoRA_Weights->>Optimizer: Step
+Optimizer->>Disk: Save Adapter Weights
 ```
 
 ## Component Breakdown
-- **Core Technology**: Python, Hugging Face, Unsloth, W&B
-- **Design Paradigm**: Emphasizes high availability, fault tolerance, and security.
+- **Core Technology**: Python, PyTorch, PEFT
+- **Design Paradigm**: Emphasizes high availability, fault tolerance, and security boundaries.
+
+## Security & Scaling Considerations
+- Strict input validations and sanitization.
+- Horizontal scalability achieved via stateless workers and queues where applicable.
+- Encrypted data at rest and in transit.

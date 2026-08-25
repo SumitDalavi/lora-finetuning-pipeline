@@ -1,18 +1,23 @@
-# Fine-Tuning Pipeline with LoRA
+# lora-finetuning-pipeline
 
-> An end-to-end pipeline that takes a domain-specific dataset, applies LoRA fine-tuning to an open-source base model, and evaluates it on task-specific benchmarks.
+Pipeline for efficiently fine-tuning large language models using LoRA (Low-Rank Adaptation) and PEFT.
 
-## 🛠️ Tech Stack
-- **Core Technology**: Python, Hugging Face, Unsloth, W&B
-- **Architecture**: Microservices, Event-Driven, AI-Native
+## Features
+- Fully automated workflow.
+- Secure, scalable architecture.
+- Built-in telemetry and observability.
 
-## 🚀 Step-by-Step Setup
+## Technologies
+- Python, PyTorch, PEFT
+
+## Getting Started
+Ensure you have the required dependencies installed on your system.
+
 ```bash
-git clone https://github.com/SumitDalavi/lora-finetuning-pipeline.git
-cd lora-finetuning-pipeline
-docker-compose up -d --build
+# Setup & Test
+pip install -r requirements.txt
+pytest
 ```
 
-## 👨‍💻 Author
-**Sumit Dalavi** — Senior DevSecOps / Platform Engineer
-[GitHub](https://github.com/SumitDalavi) | [LinkedIn](https://in.linkedin.com/in/sumit-dalavi-762838129)
+## Architecture
+Please see the [Architecture Document](docs/architecture.md) for sequence diagrams and system design details.
