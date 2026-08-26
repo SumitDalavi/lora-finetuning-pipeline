@@ -1,62 +1,64 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import torch
+"""vLLM / Ollama serving integration for fine-tuned LoRA models."""
+from __future__ import annotations
 import os
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from peft import PeftModel
+from typing import List, Optional
 
-app = FastAPI(title="Medical LoRA Inference Server")
+try:
+    import httpx
+    _OK = True
+except ImportError:
+    _OK = False
 
-BASE_MODEL_NAME = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
-ADAPTER_PATH = "../training/lora-adapter-output"
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
+VLLM_URL = os.getenv("VLLM_URL", "http://localhost:8000")
 
-tokenizer = None
-model = None
 
-class InferenceRequest(BaseModel):
-    instruction: str
-    input_text: str
+def generate_ollama(model: str, prompt: str, max_tokens: int = 256, temperature: float = 0.7) -> str:
+    """Generate text via Ollama API."""
+    if not _OK:
+        return f"[mock] Response to: {prompt[:50]}..."
+    try:
+        resp = httpx.post(
+            f"{OLLAMA_URL}/api/generate",
+            json={"model": model, "prompt": prompt, "options": {
+                "num_predict": max_tokens, "temperature": temperature
+            }, "stream": False},
+            timeout=60,
+        )
+        return resp.json().get("response", "")
+    except Exception as e:
+        return f"[error] {e}"
 
-@app.on_event("startup")
-def load_models():
-    global tokenizer, model
-    print("Initializing inference server...")
-    
-    device_map = "auto" if torch.cuda.is_available() else "cpu"
-    
-    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_NAME)
-    base_model = AutoModelForCausalLM.from_pretrained(
-        BASE_MODEL_NAME,
-        device_map=device_map,
-        torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-    )
-    
-    if os.path.exists(ADAPTER_PATH):
-        print("Loading LoRA adapter...")
-        model = PeftModel.from_pretrained(base_model, ADAPTER_PATH)
-    else:
-        print("Warning: LoRA adapter not found. Serving base model only.")
-        model = base_model
 
-@app.post("/v1/completions")
-async def generate(req: InferenceRequest):
-    if not model or not tokenizer:
-        raise HTTPException(status_code=500, detail="Models not loaded")
-        
-    prompt = f"Instruction: {req.instruction}\nInput: {req.input_text}\nOutput: "
-    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
-    
-    with torch.no_grad():
-        outputs = model.generate(**inputs, max_new_tokens=150, temperature=0.1)
-        
-    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    clean_response = response.replace(prompt, "").strip()
-    
-    return {
-        "model": "TinyLlama-LoRA",
-        "output": clean_response
-    }
+def generate_vllm(model: str, prompt: str, max_tokens: int = 256, temperature: float = 0.7) -> str:
+    """Generate text via vLLM OpenAI-compatible API."""
+    if not _OK:
+        return f"[mock] Response to: {prompt[:50]}..."
+    try:
+        resp = httpx.post(
+            f"{VLLM_URL}/v1/completions",
+            json={"model": model, "prompt": prompt, "max_tokens": max_tokens,
+                  "temperature": temperature},
+            timeout=60,
+        )
+        data = resp.json()
+        return data["choices"][0]["text"] if data.get("choices") else ""
+    except Exception as e:
+        return f"[error] {e}"
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+def batch_evaluate_serving(
+    model: str,
+    examples: List[dict],
+    backend: str = "ollama",
+    max_tokens: int = 200,
+) -> List[str]:
+    """Run batch inference on eval examples using the specified backend."""
+    generate_fn = generate_ollama if backend == "ollama" else generate_vllm
+    predictions = []
+    for ex in examples:
+        from preprocessing.tokenizer import format_example
+        prompt = format_example({**ex, "output": ""}, format="alpaca").rstrip()
+        pred = generate_fn(model, prompt, max_tokens=max_tokens)
+        predictions.append(pred)
+    return predictions
