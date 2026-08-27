@@ -12,6 +12,13 @@ def test_convert_qa_to_alpaca():
     assert result[0]["instruction"] == "What is LoRA?"
     assert result[0]["output"] == "Low-Rank Adaptation."
 
+def test_convert_prompt_completion_to_alpaca():
+    raw = [{"prompt": "Translate Hello", "completion": "Bonjour"}]
+    result = convert_to_alpaca(raw)
+    assert len(result) == 1
+    assert result[0]["instruction"] == "Translate Hello"
+    assert result[0]["output"] == "Bonjour"
+
 
 def test_convert_passthrough_alpaca():
     ex = {"instruction": "Summarize", "input": "", "output": "Summary."}
