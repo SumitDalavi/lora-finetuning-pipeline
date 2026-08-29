@@ -1,0 +1,19 @@
+{
+  "run_id": "lora_run_1a2b3c",
+  "hardware": {
+    "instance_type": "AWS g5.2xlarge (Mocked)",
+    "gpu_count": 1,
+    "runtime_hours": 1.5
+  },
+  "metrics": {
+    "final_loss": 0.98,
+    "eval_perplexity": 14.2,
+    "bleu_score": 0.45
+  },
+  "cost": {
+    "compute_usd": 1.83,
+    "storage_usd": 0.05,
+    "total_usd": 1.88
+  },
+  "notes": "Cost is highly optimized compared to full fine-tuning which would require p4d instances and $50+ per run."
+}
