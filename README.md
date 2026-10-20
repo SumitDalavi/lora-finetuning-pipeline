@@ -1,14 +1,14 @@
 > **NOTE:** This repository is an archival lab or partial prototype. It is not actively maintained and should not be used as a reference for production-grade deployments or performance benchmarks.
 
-
 # lora-finetuning-pipeline
 
-[![Release](https://img.shields.io/github/v/release/SumitDalavi/lora-finetuning-pipeline?color=blue&logo=github)](https://github.com/SumitDalavi/lora-finetuning-pipeline/releases)
+[![CI Pipeline](https://github.com/SumitDalavi/lora-finetuning-pipeline/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/SumitDalavi/lora-finetuning-pipeline/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/SumitDalavi/lora-finetuning-pipeline?color=0969da&label=release&logo=github)](https://github.com/SumitDalavi/lora-finetuning-pipeline/releases)
 [![Release Workflow](https://github.com/SumitDalavi/lora-finetuning-pipeline/actions/workflows/release.yml/badge.svg)](https://github.com/SumitDalavi/lora-finetuning-pipeline/actions/workflows/release.yml)
-[![SBOM](https://img.shields.io/badge/SBOM-SPDX%20JSON-blueviolet?logo=spdx)](https://github.com/SumitDalavi/lora-finetuning-pipeline/releases)
-
-[![Release](https://img.shields.io/github/v/release/SumitDalavi/lora-finetuning-pipeline?color=blue&logo=github)](https://github.com/SumitDalavi/lora-finetuning-pipeline/releases)
-[![SBOM](https://img.shields.io/badge/SBOM-SPDX%20JSON-blueviolet?logo=spdx)](https://github.com/SumitDalavi/lora-finetuning-pipeline/releases)
+[![GHCR Container](https://img.shields.io/badge/ghcr.io-v0.2.0-blue?logo=docker&logoColor=white)](https://github.com/SumitDalavi/lora-finetuning-pipeline/pkgs/container/lora-finetuning-pipeline)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org)
+[![SBOM](https://img.shields.io/badge/SBOM-SPDX%202.3-blueviolet?logo=spdx)](https://github.com/SumitDalavi/lora-finetuning-pipeline/releases/tag/v0.2.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 > **Maturity:** Functional Prototype
 > _Pipeline for efficiently fine-tuning large language models using LoRA (Low-Rank Adaptation) and PEFT._
@@ -32,7 +32,6 @@ pytest
 
 ## Architecture
 Please see the [Architecture Document](docs/architecture.md) for sequence diagrams and system design details.
-
 
 ## CI & Reliability Updates (August 2026)
 
