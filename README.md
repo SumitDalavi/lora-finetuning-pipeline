@@ -8,8 +8,7 @@
 [![SBOM](https://img.shields.io/badge/SBOM-SPDX%202.3-blueviolet?logo=spdx)](https://github.com/SumitDalavi/lora-finetuning-pipeline/releases/tag/v0.2.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-> **Maturity:** Functional Prototype
-> _Pipeline for efficiently fine-tuning large language models using LoRA (Low-Rank Adaptation) and PEFT._
+> Pipeline for efficiently fine-tuning large language models using LoRA (Low-Rank Adaptation) and PEFT.
 
 ## Features
 - Fully automated workflow.
